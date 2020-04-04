@@ -46,3 +46,14 @@ CREATE TABLE employee (
   PRIMARY KEY (id)
 ); 
 
+-- Starting information for the department table --
+INSERT INTO department (id, name)
+VALUES (1, "Finance"), (2, "Executive"), (3, "IT"), (4, "Admin");
+
+-- Starting information for the role table --
+INSERT INTO role (id, title, salary, department_id)
+VALUES (1, "Accountant", 75000, 1), (2, "Business Analyst", 55000, 2), (3, "Client Manager", 50000, 3), (4, "Database Engineer", 60000, 4), (5, "Executive Director", 250000, 5);
+
+-- Starting information for the employee table --
+INSERT INTO employee (first_name, last_name, role_id, manager_id)
+VALUES ("Abby", "Anderson", 10, 100), ("Bob", "Brown", 20, 200), ("Calvin", "Cooper", 30, 300);

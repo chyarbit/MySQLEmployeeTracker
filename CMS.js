@@ -28,19 +28,42 @@ connection.connect(function(err) {
   // if the connection does work, console log the message below
   console.log("connected as id " + connection.threadId + "\n");
   // call function createDepartment
-  createDepartment();
+  addDepartment();
 });
 
-function createDepartment(){
+// when user runs program, prompted to select an action
+  // 
 
+// create function createDepartment
+function addDepartment(){
+    // console log the message below
+    console.log("Creating a new department \n");
+    // define variable query as the mysql method to establish a connection to the server
+    var query = connection.query(
+        // insert a new department table by
+        "INSERT INTO department SET ? ",
+        // define an error function
+        function(error, response){
+          // if there is an error, stop the program
+          if (error) throw error;
+          // if successful, console log the message below
+          console.log(response.affectedRows + " department created \n")
+        }
+    )
 };
 
-function createRole(){
-
+function addRole(){
+    console.log("Creating a new role");
+    var query = connection.query(
+        "UPDATE role SET ? WHERE ?"
+        )
 };
 
 function createEmployee(){
-
+    console.log("Creating a new role");
+    var query = connection.query(
+        "UPDATE employee SET ? WHERE ?"
+        )
 };
 
 function readDepartment(){
