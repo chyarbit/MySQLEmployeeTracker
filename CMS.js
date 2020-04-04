@@ -64,48 +64,48 @@ connection.connect(function(err) {
 }
 // create function createDepartment
 function addDepartment(){
-    // console log the message below
-    console.log("Creating a new department \n");
-    // define variable query as the mysql method to establish a connection to the server
-    var query = connection.query(
-        // insert a new department with the given information
-        "INSERT INTO department SET ?",
-        // define an error function
-        function(error, response){
-          // if there is an error, stop the program
-          if (error) throw error;
-          // if successful, console log the message below
-          console.log(response.affectedRows + " department created \n")
-        }
-    )
+  // console log the message below
+  console.log("Creating a new department \n");
+  // define variable query as the mysql method to establish a connection to the server
+  var query = connection.query(
+    // insert a new department with the given information
+    "INSERT INTO department SET ?",
+    // define an error function
+    function(error, response){
+      // if there is an error, stop the program
+      if (error) throw error;
+      // if successful, console log the message below
+      console.log(response.affectedRows + " department created \n")
+    }
+  )
 };
 
 function addRole(){
-    console.log("Creating a new role");
-    var query = connection.query(
-        "INSERT INTO role SET ?",
-        // define an error function
-        function(error, response){
-          // if there is an error, stop the program
-          if (error) throw error;
-          // if successful, console log the message below
-          console.log(response.affectedRows + " department created \n")
-        }       
-    )
+  console.log("Creating a new role");
+  var query = connection.query(
+    "INSERT INTO role SET ?",
+    // define an error function
+    function(error, response){
+      // if there is an error, stop the program
+      if (error) throw error;
+      // if successful, console log the message below
+      console.log(response.affectedRows + " department created \n")
+    }       
+  )
 };
 
 function createEmployee(){
-    console.log("Creating a new role");
-    var query = connection.query(
-        "INSERT INTO employee SET ?",
-        // define an error function
-        function(error, response){
-          // if there is an error, stop the program
-          if (error) throw error;
-          // if successful, console log the message below
-          console.log(response.affectedRows + " department created \n")
-        }
-    )
+  console.log("Creating a new role");
+  var query = connection.query(
+    "INSERT INTO employee SET ?",
+    // define an error function
+    function(error, response){
+      // if there is an error, stop the program
+      if (error) throw error;
+      // if successful, console log the message below
+      console.log(response.affectedRows + " department created \n")
+    }
+  )
 };
 
 function readDepartment(){
@@ -121,5 +121,14 @@ function readEmployee(){
 };
 
 function updateEmployee(){
-
+  console.log("Updating employee information");
+  var query = connection.query(
+    "UPDATE products SET ? WHERE ?",
+    function(error, response){
+    // if there is an error, stop the program
+      if (error) throw error;
+      // if successful, console log the message below
+      console.log(response.affectedRows + " department created \n")
+    }
+  )
 };
