@@ -31,29 +31,27 @@ connection.connect(function(err) {
   start();
 });
 
+// define constant questions for the inquirer prompt
+const questions = [
+  {
+    type: "list",
+    message: "What would you like to do?",
+    choices: 
+        [
+          "View departments",
+          "View roles",
+          "View employees",
+          "Add department",
+          "Add role",
+          "Add employee",
+          "Update employee",
+          "Exit the program",
+        ],
+    name: "task"
+  },
+]
 // define a function called Start to start the program
 function start(){
-  // define constant questions for the inquirer prompt
-  const questions = [
-    {
-        type: "list",
-        message: "What would you like to do?",
-        choices: 
-          [
-            "View departments",
-            "View roles",
-            "View employees",
-            "Add department",
-            "Add role",
-            "Add employee",
-            "Update employee",
-            "Exit the program",
-          ],
-        name: "task"
-    },
-  ]
-}
-
 // use inquirer
 inquirer
 // using inqirer's prompt method and feed in the the constant questions
@@ -92,9 +90,11 @@ inquirer
 
     case "Exit the program":
       return 
-  }
+  };
+});
+};
 
-})
+
 // create function createDepartment
 function addDepartment(){
   // console log the message below
