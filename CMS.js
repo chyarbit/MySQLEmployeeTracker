@@ -11,7 +11,7 @@ var connection = mysql.createConnection({
   host: "localhost",
 
   // Your port; if not 8113
-  port: 8113,
+  port: process.env.PORT || 8113,
 
   // Your username
   user: "root",
@@ -27,21 +27,12 @@ connection.connect(function(err) {
   if (err) throw err;
   // if the connection does work, console log the message below
   console.log("connected as id " + connection.threadId + "\n");
-  // call function createDepartment
-  addDepartment();
+  // call function start
+  start();
 });
 
-// when user runs program, prompted to select an action
-  // view department
-  // view roles
-  // view employees
-  // add department
-  // add role
-  // add employee
-  // update employee
-
-  // define a function called Start to start the program
-  function start(){
+// define a function called Start to start the program
+function start(){
   // define constant questions for the inquirer prompt
   const questions = [
     {
@@ -62,6 +53,48 @@ connection.connect(function(err) {
     },
   ]
 }
+
+// use inquirer
+inquirer
+// using inqirer's prompt method and feed in the the constant questions
+.prompt(questions)
+// use .then promise method with the answers parameter
+.then(function(answers){
+  //use a switch case function and feed in the answer received from the start function
+  switch(answers.task){
+    case "View departments":
+      viewDepartment();
+    break
+
+    case "View roles":
+      viewRole();
+    break
+
+    case "View employees":
+      viewEmployee();
+    break
+
+    case "Add department":
+      addDepartment();
+    break
+
+    case "Add role":
+      addRole();
+    break
+
+    case "Add employee":
+      addEmployee();
+    break
+
+    case "Update employee":
+      updateEmployee();
+    break
+
+    case "Exit the program":
+      return 
+  }
+
+})
 // create function createDepartment
 function addDepartment(){
   // console log the message below
@@ -76,9 +109,9 @@ function addDepartment(){
       if (error) throw error;
       // if successful, console log the message below
       console.log(response.affectedRows + " department created \n");
-      start();
-    }
-  )
+      // call start function to run through task options again
+     })
+  start();
 };
 
 function addRole(){
@@ -91,12 +124,11 @@ function addRole(){
       if (error) throw error;
       // if successful, console log the message below
       console.log(response.affectedRows + " role created \n");
-      start();
-    }       
-  )
+    })
+  start();
 };
 
-function createEmployee(){
+function addEmployee(){
   console.log("Creating a new role \n");
   var query = connection.query(
     "INSERT INTO employee SET ?",
@@ -106,53 +138,55 @@ function createEmployee(){
       if (error) throw error;
       // if successful, console log the message below
       console.log(response.affectedRows + " employee created \n");
-      start();
-    }
-  )
+    })
+  start();
 };
 
-function readDepartment(){
+function viewDepartment(){
   console.log("Selecting all departments \n");
-  connection.query("SELECT * FROM department", function(error, response) {
-    if (error) throw error;
-    // Log all results of the SELECT statement
-    console.table(response);
-    connection.end();
-    start();
-  });
+  var query = connection.query(
+    "SELECT * FROM department", 
+    function(error, response) {
+      if (error) throw error;
+      // Log all results of the SELECT statement
+      console.table(response);
+    });
+  start();
 };
 
-function readRole(){
+function viewRole(){
   console.log("Selecting all roles \n");
-  connection.query("SELECT * FROM role", function(error, response) {
-    if (error) throw error;
-    // Log all results of the SELECT statement
-    console.table(response);
-    connection.end();
-    start();
-  });
+  var query = connection.query(
+    "SELECT * FROM role", 
+    function(error, response) {
+      if (error) throw error;
+      // Log all results of the SELECT statement
+      console.table(response);
+    });
+  start();
 };
 
-function readEmployee(){
+function viewEmployee(){
   console.log("Selecting all employees \n");
-  connection.query("SELECT * FROM employee", function(error, response) {
-    if (error) throw error;
-    // Log all results of the SELECT statement
-    console.table(response);
-    connection.end();
-    start();
-  });
+  var query = connection.query(
+    "SELECT * FROM employee", 
+    function(error, response) {
+      if (error) throw error;
+      // Log all results of the SELECT statement
+      console.table(response);
+    });
+  start();
 };
 
 function updateEmployee(){
   console.log("Updating employee information \n");
   var query = connection.query(
-    "UPDATE products SET ? WHERE ?",
+    "UPDATE employee SET ? WHERE ?",
     function(error, response){
     // if there is an error, stop the program
       if (error) throw error;
       // if successful, console log the message below
-      console.log(response.affectedRows + " employee information updated \n")
-    }
-  )
+      console.log(response.affectedRows + " employee information updated \n");
+    });
+  start();
 };
