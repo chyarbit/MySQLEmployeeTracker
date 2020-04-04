@@ -24,9 +24,9 @@ var connection = mysql.createConnection({
 // using mysql's connect method- create a connection to the server
 connection.connect(function(err) {
   // if the connection does not work, terminate the program
-  if (err) throw err;
+  //if (err) throw err;
   // if the connection does work, console log the message below
-  console.log("connected as id " + connection.threadId + "\n");
+  //console.log("connected as id " + connection.threadId + "\n");
   // call function start
   start();
 });
@@ -34,7 +34,7 @@ connection.connect(function(err) {
 // define constant questions for the inquirer prompt
 const questions = [
   {
-    type: "list",
+    type: "rawlist",
     message: "What would you like to do?",
     choices: 
         [
@@ -45,11 +45,12 @@ const questions = [
           "Add role",
           "Add employee",
           "Update employee",
-          "Exit the program",
+          "Exit the program"
         ],
     name: "task"
   },
 ]
+
 // define a function called Start to start the program
 function start(){
 // use inquirer
@@ -110,8 +111,7 @@ function addDepartment(){
       // if successful, console log the message below
       console.log(response.affectedRows + " department created \n");
       // call start function to run through task options again
-     })
-  start();
+     });
 };
 
 function addRole(){
@@ -124,8 +124,7 @@ function addRole(){
       if (error) throw error;
       // if successful, console log the message below
       console.log(response.affectedRows + " role created \n");
-    })
-  start();
+    });
 };
 
 function addEmployee(){
@@ -138,8 +137,7 @@ function addEmployee(){
       if (error) throw error;
       // if successful, console log the message below
       console.log(response.affectedRows + " employee created \n");
-    })
-  start();
+    });
 };
 
 function viewDepartment(){
@@ -151,7 +149,6 @@ function viewDepartment(){
       // Log all results of the SELECT statement
       console.table(response);
     });
-  start();
 };
 
 function viewRole(){
@@ -163,7 +160,6 @@ function viewRole(){
       // Log all results of the SELECT statement
       console.table(response);
     });
-  start();
 };
 
 function viewEmployee(){
@@ -175,7 +171,6 @@ function viewEmployee(){
       // Log all results of the SELECT statement
       console.table(response);
     });
-  start();
 };
 
 function updateEmployee(){
@@ -188,5 +183,5 @@ function updateEmployee(){
       // if successful, console log the message below
       console.log(response.affectedRows + " employee information updated \n");
     });
-  start();
 };
+
