@@ -181,8 +181,38 @@ function addRole(){
 
 function addEmployee(){
   console.log("Creating a new role \n");
+  inquirer
+  .prompt(
+    [{
+      type: "input",
+      message: "Please enter the first name of the new employee",
+      name: "empFirstName"
+    },
+    {
+      type: "input",
+      message: "Please enter the last name of the new employee",
+      name: "empLastName"
+    },
+    {
+      type: "input",
+      message: "Please enter the role id for the new employee",
+      name: "empRoleId"
+    },
+    {
+      type: "input",
+      message: "Please enter the manager id for the new employee",
+      name: "empMgrId"
+    }],
+  )
+  .then(async function({empFirstName, empLastName, empRoleId, empMgrId}){
   connection.query(
     "INSERT INTO employee SET ?",
+    {
+      first_name: empFirstName,
+      last_name: empLastName, 
+      role_id: empRoleId,
+      manager_id: empMgrId
+    },
     // define an error function
     function(error, response){
       // if there is an error, stop the program
@@ -191,6 +221,7 @@ function addEmployee(){
       console.log(response.affectedRows + " employee created \n");
       start();
     });
+});
 };
 
 function viewDepartment(){
