@@ -95,15 +95,32 @@ inquirer
 });
 };
 
-
 // create function createDepartment
 function addDepartment(){
   // console log the message below
   console.log("Creating a new department \n");
-  // define variable query as the mysql method to establish a connection to the server
+  inquirer
+  .prompt(
+    [{
+      type: "input",
+      message: "Please enter the id number of the new department",
+      name: "id"
+    },
+    {
+      type: "input",
+      message: "Please enter name of the new department",
+      name: "name"
+    }],
+  )
+ .then(async function({id, name}){
+   // define variable query as the mysql method to establish a connection to the server
   connection.query(
     // insert a new department with the given information
     "INSERT INTO department SET ?",
+    {
+      id: id,
+      name: name
+    },
     // define an error function
     function(error, response){
       // if there is an error, stop the program
@@ -111,7 +128,12 @@ function addDepartment(){
       // if successful, console log the message below
       console.log(response.affectedRows + " department created \n");
       // call start function to run through task options again
-      start();
+      start(); 
+
+  }
+    
+  )
+  
      });
 };
 
