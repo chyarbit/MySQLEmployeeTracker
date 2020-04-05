@@ -4,14 +4,14 @@ var mysql = require("mysql");
 // require inquirer
 var inquirer = require("inquirer");
 // require console.table npm
-var console = require("console.table");
+var cTable = require("console.table");
 
 // define connection as mysql's createConnection method
 var connection = mysql.createConnection({
   host: "localhost",
 
-  // Your port; if not 8113
-  port: process.env.PORT || 8113,
+  // Your port; if not 3306
+  port: process.env.PORT || 3306,
 
   // Your username
   user: "root",
@@ -24,9 +24,9 @@ var connection = mysql.createConnection({
 // using mysql's connect method- create a connection to the server
 connection.connect(function(err) {
   // if the connection does not work, terminate the program
-  //if (err) throw err;
+  if (err) throw err;
   // if the connection does work, console log the message below
-  //console.log("connected as id " + connection.threadId + "\n");
+  console.log("connected as id " + connection.threadId + "\n");
   // call function start
   start();
 });
@@ -101,7 +101,7 @@ function addDepartment(){
   // console log the message below
   console.log("Creating a new department \n");
   // define variable query as the mysql method to establish a connection to the server
-  var query = connection.query(
+  connection.query(
     // insert a new department with the given information
     "INSERT INTO department SET ?",
     // define an error function
@@ -111,12 +111,13 @@ function addDepartment(){
       // if successful, console log the message below
       console.log(response.affectedRows + " department created \n");
       // call start function to run through task options again
+      start();
      });
 };
 
 function addRole(){
   console.log("Creating a new role \n");
-  var query = connection.query(
+  connection.query(
     "INSERT INTO role SET ?",
     // define an error function
     function(error, response){
@@ -124,12 +125,13 @@ function addRole(){
       if (error) throw error;
       // if successful, console log the message below
       console.log(response.affectedRows + " role created \n");
+      start();
     });
 };
 
 function addEmployee(){
   console.log("Creating a new role \n");
-  var query = connection.query(
+  connection.query(
     "INSERT INTO employee SET ?",
     // define an error function
     function(error, response){
@@ -137,51 +139,56 @@ function addEmployee(){
       if (error) throw error;
       // if successful, console log the message below
       console.log(response.affectedRows + " employee created \n");
+      start();
     });
 };
 
 function viewDepartment(){
   console.log("Selecting all departments \n");
-  var query = connection.query(
+  connection.query(
     "SELECT * FROM department", 
     function(error, response) {
       if (error) throw error;
       // Log all results of the SELECT statement
       console.table(response);
+      start();
     });
 };
 
 function viewRole(){
   console.log("Selecting all roles \n");
-  var query = connection.query(
+  connection.query(
     "SELECT * FROM role", 
     function(error, response) {
       if (error) throw error;
       // Log all results of the SELECT statement
       console.table(response);
+      start();
     });
 };
 
 function viewEmployee(){
   console.log("Selecting all employees \n");
-  var query = connection.query(
+  connection.query(
     "SELECT * FROM employee", 
     function(error, response) {
       if (error) throw error;
       // Log all results of the SELECT statement
       console.table(response);
+      start();
     });
 };
 
 function updateEmployee(){
   console.log("Updating employee information \n");
-  var query = connection.query(
+  connection.query(
     "UPDATE employee SET ? WHERE ?",
     function(error, response){
     // if there is an error, stop the program
       if (error) throw error;
       // if successful, console log the message below
       console.log(response.affectedRows + " employee information updated \n");
+      start();
     });
 };
 
