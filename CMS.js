@@ -104,22 +104,22 @@ function addDepartment(){
     [{
       type: "input",
       message: "Please enter the id number of the new department",
-      name: "id"
+      name: "deptId"
     },
     {
       type: "input",
       message: "Please enter name of the new department",
-      name: "name"
+      name: "deptName"
     }],
   )
- .then(async function({id, name}){
+ .then(async function({deptId, deptName}){
    // define variable query as the mysql method to establish a connection to the server
   connection.query(
     // insert a new department with the given information
     "INSERT INTO department SET ?",
     {
-      id: id,
-      name: name
+      id: deptId,
+      name: deptName
     },
     // define an error function
     function(error, response){
@@ -129,18 +129,45 @@ function addDepartment(){
       console.log(response.affectedRows + " department created \n");
       // call start function to run through task options again
       start(); 
-
-  }
-    
-  )
-  
-     });
+    })
+  });
 };
 
 function addRole(){
   console.log("Creating a new role \n");
+  inquirer
+  .prompt(
+    [{
+      type: "input",
+      message: "Please enter the id number of the new role",
+      name: "roleId"
+    },
+    {
+      type: "input",
+      message: "Please enter the title for the new role",
+      name: "roleTitle"
+    },
+    {
+      type: "input",
+      message: "Please enter the salary for the new role",
+      name: "roleSalary"
+    },
+    {
+      type: "input",
+      message: "Please enter the department id for the new role",
+      name: "roleDeptId"
+    }],
+  )
+  .then(async function({roleId, roleTitle, roleSalary, roleDeptId}){
+    // define variable query as the mysql method to establish a connection to the server
   connection.query(
     "INSERT INTO role SET ?",
+    {
+      id: roleId,
+      title: roleTitle,
+      salary: roleSalary,
+      department_id: roleDeptId
+    },
     // define an error function
     function(error, response){
       // if there is an error, stop the program
@@ -149,6 +176,7 @@ function addRole(){
       console.log(response.affectedRows + " role created \n");
       start();
     });
+  });
 };
 
 function addEmployee(){
