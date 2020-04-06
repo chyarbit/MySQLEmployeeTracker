@@ -4,7 +4,7 @@ var mysql = require("mysql");
 // require inquirer
 var inquirer = require("inquirer");
 // require console.table npm
-var cTable = require("console.table");
+//var cTable = require("console.table");
 
 // define connection as mysql's createConnection method
 var connection = mysql.createConnection({
@@ -31,6 +31,8 @@ connection.connect(function(err) {
   start();
 });
 
+const empArray = [];
+
 // define constant questions for the inquirer prompt
 const questions = [
   {
@@ -51,8 +53,20 @@ const questions = [
   },
 ]
 
+function populateData(){
+  connection.query(
+    "SELECT * FROM employee",
+    function(request,response){
+      for (var i=0; i<response.length; i++){
+        empArray.push((response[i].first_name + " " + response[i].last_name))
+      }
+      console.log(empArray)
+    })
+};
+
 // define a function called Start to start the program
 function start(){
+  populateData
 // use inquirer
 inquirer
 // using inqirer's prompt method and feed in the the constant questions
@@ -86,11 +100,11 @@ inquirer
     break
 
     case "Update employee":
-      updateEmployee();
+      selectEmployeetoUpdate();
     break
 
     case "Exit the program":
-      return 
+      process.exit
   };
 });
 };
@@ -225,6 +239,7 @@ function viewDepartment(){
     "SELECT * FROM department", 
     function(error, response) {
       if (error) throw error;
+      return response;
       // Log all results of the SELECT statement
       console.table(response);
       start();
@@ -236,6 +251,7 @@ function viewRole(){
     "SELECT * FROM role", 
     function(error, response) {
       if (error) throw error;
+      return response;
       // Log all results of the SELECT statement
       console.table(response);
       start();
@@ -247,14 +263,30 @@ function viewEmployee(){
     "SELECT * FROM employee", 
     function(error, response) {
       if (error) throw error;
+      return response;
       // Log all results of the SELECT statement
       console.table(response);
       start();
     });
 };
 
+function selectEmployeeToUpdate(){
+inquirer
+.prompt(
+  {
+    type: "rawlist",
+    message: "Which employee would you like to update?",
+    choices: empArray,
+    name: "employeeToUpdate"
+  }
+  )
+  .then(function({employee}){
+    updateEmployee(employee);
+  })
+};
+
 function updateEmployee(){
-  viewEmployee();
+  //viewEmployee();
   inquirer
   .prompt(
     [
@@ -273,7 +305,7 @@ function updateEmployee(){
       message: "Please enter the updated first name of the employee",
       name: "updateEmpFirstName",
       when: function(answers){
-        return answers.updateEmpChoice === "Employee's First Name";
+        answers.updateEmpChoice === "Employee's First Name";
       }
     },
     {
@@ -281,7 +313,7 @@ function updateEmployee(){
       message: "Please enter the updated last name of the employee",
       name: "updateEmpLastName",
       when: function(answers){
-        return answers.updateEmpChoice === "Employee's Last Name";
+        answers.updateEmpChoice === "Employee's Last Name";
       }
     },
     {
@@ -289,7 +321,7 @@ function updateEmployee(){
       message: "Please enter the updated role id for the employee",
       name: "updateEmpRoleId",
       when: function(answers){
-        return answers.updateEmpChoice === "Employee's Role Id";
+        answers.updateEmpChoice === "Employee's Role Id";
       }
     },
     {
@@ -297,11 +329,12 @@ function updateEmployee(){
       message: "Please enter the updated manager id for the  employee",
       name: "updateEmpMgrId",
       when: function(answers){
-        return answers.updateEmpChoice === "Employee's Manager's Role Id";
+        answers.updateEmpChoice === "Employee's Manager's Role Id";
       }
     }],
   )
   .then(function(answers){
+    console.log("yeah")
     switch(answers.updateEmpChoice){
       case "Employee's First Name":
         connection.query(
@@ -320,7 +353,6 @@ function updateEmployee(){
             start();
           });
     }
-  
-});
+  });
 };
 
