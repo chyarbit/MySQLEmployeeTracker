@@ -97,8 +97,6 @@ inquirer
 
 // create function createDepartment
 function addDepartment(){
-  // console log the message below
-  console.log("Creating a new department \n");
   inquirer
   .prompt(
     [{
@@ -112,7 +110,7 @@ function addDepartment(){
       name: "deptName"
     }],
   )
- .then(async function({deptId, deptName}){
+ .then(function({deptId, deptName}){
    // define variable query as the mysql method to establish a connection to the server
   connection.query(
     // insert a new department with the given information
@@ -134,7 +132,6 @@ function addDepartment(){
 };
 
 function addRole(){
-  console.log("Creating a new role \n");
   inquirer
   .prompt(
     [{
@@ -158,7 +155,7 @@ function addRole(){
       name: "roleDeptId"
     }],
   )
-  .then(async function({roleId, roleTitle, roleSalary, roleDeptId}){
+  .then(function({roleId, roleTitle, roleSalary, roleDeptId}){
     // define variable query as the mysql method to establish a connection to the server
   connection.query(
     "INSERT INTO role SET ?",
@@ -180,7 +177,6 @@ function addRole(){
 };
 
 function addEmployee(){
-  console.log("Creating a new role \n");
   inquirer
   .prompt(
     [{
@@ -225,7 +221,6 @@ function addEmployee(){
 };
 
 function viewDepartment(){
-  console.log("Selecting all departments \n");
   connection.query(
     "SELECT * FROM department", 
     function(error, response) {
@@ -237,7 +232,6 @@ function viewDepartment(){
 };
 
 function viewRole(){
-  console.log("Selecting all roles \n");
   connection.query(
     "SELECT * FROM role", 
     function(error, response) {
@@ -249,7 +243,6 @@ function viewRole(){
 };
 
 function viewEmployee(){
-  console.log("Selecting all employees \n");
   connection.query(
     "SELECT * FROM employee", 
     function(error, response) {
@@ -261,15 +254,73 @@ function viewEmployee(){
 };
 
 function updateEmployee(){
-  console.log("Updating employee information \n");
-  connection.query(
-    "UPDATE employee SET ? WHERE ?",
-    function(error, response){
-    // if there is an error, stop the program
-      if (error) throw error;
-      // if successful, console log the message below
-      console.log(response.affectedRows + " employee information updated \n");
-      start();
-    });
+  viewEmployee();
+  inquirer
+  .prompt(
+    [
+      {
+      type: "rawlist",
+      message: "What would you like to update?",
+      choices: [
+        "Employee's First Name", 
+        "Employee's Last Name", 
+        "Employee's Role Id",
+        "Employee's Manager's Role Id"],
+      name: "updateEmpChoice"
+    },
+    {
+      type: "input",
+      message: "Please enter the updated first name of the employee",
+      name: "updateEmpFirstName",
+      when: function(answers){
+        return answers.updateEmpChoice === "Employee's First Name";
+      }
+    },
+    {
+      type: "input",
+      message: "Please enter the updated last name of the employee",
+      name: "updateEmpLastName",
+      when: function(answers){
+        return answers.updateEmpChoice === "Employee's Last Name";
+      }
+    },
+    {
+      type: "input",
+      message: "Please enter the updated role id for the employee",
+      name: "updateEmpRoleId",
+      when: function(answers){
+        return answers.updateEmpChoice === "Employee's Role Id";
+      }
+    },
+    {
+      type: "input",
+      message: "Please enter the updated manager id for the  employee",
+      name: "updateEmpMgrId",
+      when: function(answers){
+        return answers.updateEmpChoice === "Employee's Manager's Role Id";
+      }
+    }],
+  )
+  .then(function(answers){
+    switch(answers.updateEmpChoice){
+      case "Employee's First Name":
+        connection.query(
+        "UPDATE employee SET ? WHERE ?",
+        {
+          first_name: updateEmpFirstName,
+        },        
+        {
+          first_name: updateEmpFirstName,
+        },
+          function(error, response){
+          // if there is an error, stop the program
+            if (error) throw error;
+            // if successful, console log the message below
+            console.log(response.affectedRows + " employee information updated \n");
+            start();
+          });
+    }
+  
+});
 };
 
