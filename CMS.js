@@ -311,17 +311,17 @@ inquirer
   {
     type: "rawlist",
     message: "Which employee would you like to update?",
-    choices: empArray,
-    name: "employeeToUpdate"
+    name: "employeeToUpdate",
+    choices: empArray
   }
   )
-  .then(function({employeetoUpdate}){
-    updateEmployee(employeetoUpdate);
+  .then(function(data){
+    console.log(data)
+    updateEmployee(data.employeeToUpdate);
   })
 };
 
-function updateEmployee(){
-  populateData();
+function updateEmployee(employee){
   inquirer
   .prompt(
     [
@@ -369,17 +369,18 @@ function updateEmployee(){
     }],
   )
   .then(function(answers){
-    console.log("yeah")
+    console.log(employee);
+    console.log(empArray.indexOf(employee) + 1)
     switch(answers.updateEmpChoice){
       case "Employee's First Name":
         connection.query(
         "UPDATE employee SET ? WHERE ?",
-        {
+        [{
           first_name: answers.updateEmpFirstName,
         },        
         {
           id: empArray.indexOf(employee) + 1,
-        },
+        }],
           function(error, response){
           // if there is an error, stop the program
             if (error) throw error;
