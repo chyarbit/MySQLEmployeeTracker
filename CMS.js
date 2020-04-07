@@ -4,7 +4,7 @@ var mysql = require("mysql");
 // require inquirer
 var inquirer = require("inquirer");
 // require console.table npm
-//var cTable = require("console.table");
+// var cTable = require("console.table");
 
 // define connection as mysql's createConnection method
 var connection = mysql.createConnection({
@@ -32,6 +32,7 @@ connection.connect(function(err) {
 });
 
 const empArray = [];
+//console.log(empArray)
 
 // define constant questions for the inquirer prompt
 const questions = [
@@ -43,6 +44,7 @@ const questions = [
           "View departments",
           "View roles",
           "View employees",
+          "View all employees by department",
           "Add department",
           "Add role",
           "Add employee",
@@ -53,20 +55,22 @@ const questions = [
   },
 ]
 
+//var employee = "";
+
 function populateData(){
   connection.query(
     "SELECT * FROM employee",
     function(request,response){
       for (var i=0; i<response.length; i++){
-        empArray.push((response[i].first_name + " " + response[i].last_name))
+        empArray.push(response[i].first_name + " " + response[i].last_name)
       }
-      console.log(empArray)
+      //console.log(response)
     })
 };
 
 // define a function called Start to start the program
 function start(){
-  populateData
+populateData();
 // use inquirer
 inquirer
 // using inqirer's prompt method and feed in the the constant questions
@@ -87,6 +91,10 @@ inquirer
       viewEmployee();
     break
 
+    case "View all employees by department":
+      findAllEmployeesByDepartment();
+    break
+
     case "Add department":
       addDepartment();
     break
@@ -104,7 +112,7 @@ inquirer
     break
 
     case "Exit the program":
-      process.exit
+      process.exit(-1);
   };
 });
 };
@@ -126,7 +134,7 @@ function addDepartment(){
   )
  .then(function({deptId, deptName}){
    // define variable query as the mysql method to establish a connection to the server
-  connection.query(
+  return connection.query(
     // insert a new department with the given information
     "INSERT INTO department SET ?",
     {
@@ -171,7 +179,7 @@ function addRole(){
   )
   .then(function({roleId, roleTitle, roleSalary, roleDeptId}){
     // define variable query as the mysql method to establish a connection to the server
-  connection.query(
+  return connection.query(
     "INSERT INTO role SET ?",
     {
       id: roleId,
@@ -215,7 +223,7 @@ function addEmployee(){
     }],
   )
   .then(async function({empFirstName, empLastName, empRoleId, empMgrId}){
-  connection.query(
+  return connection.query(
     "INSERT INTO employee SET ?",
     {
       first_name: empFirstName,
@@ -235,11 +243,10 @@ function addEmployee(){
 };
 
 function viewDepartment(){
-  connection.query(
+  return connection.query(
     "SELECT * FROM department", 
     function(error, response) {
       if (error) throw error;
-      return response;
       // Log all results of the SELECT statement
       console.table(response);
       start();
@@ -247,11 +254,10 @@ function viewDepartment(){
 };
 
 function viewRole(){
-  connection.query(
+  return connection.query(
     "SELECT * FROM role", 
     function(error, response) {
       if (error) throw error;
-      return response;
       // Log all results of the SELECT statement
       console.table(response);
       start();
@@ -259,18 +265,47 @@ function viewRole(){
 };
 
 function viewEmployee(){
-  connection.query(
+  return connection.query(
     "SELECT * FROM employee", 
     function(error, response) {
       if (error) throw error;
-      return response;
       // Log all results of the SELECT statement
       console.table(response);
       start();
     });
 };
 
-function selectEmployeeToUpdate(){
+function findAllEmployeesByDepartment() {
+  return connection.query(
+  "SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role on employee.role_id=role.id LEFT JOIN department ON role.department_id=department.id",
+    function(error, response) {
+      if (error) throw error;
+      // Log all results of the SELECT statement
+      console.table(response);
+      start();
+    });
+  }
+
+function returnPrompt(){
+  inquirer
+  .prompt(
+    {
+    type: "confirm",
+    message: "Are you done updating the information for this employee?",
+    name: "exitUpdateMenu"
+    }
+  )
+  .then(function({exitUpdateMenu}){
+    if (!exitUpdateMenu){
+      start()
+    }
+    else{
+      selectEmployeetoUpdate();
+    }
+  })
+}
+
+function selectEmployeetoUpdate(){
 inquirer
 .prompt(
   {
@@ -280,13 +315,13 @@ inquirer
     name: "employeeToUpdate"
   }
   )
-  .then(function({employee}){
-    updateEmployee(employee);
+  .then(function({employeetoUpdate}){
+    updateEmployee(employeetoUpdate);
   })
 };
 
 function updateEmployee(){
-  //viewEmployee();
+  populateData();
   inquirer
   .prompt(
     [
@@ -305,7 +340,7 @@ function updateEmployee(){
       message: "Please enter the updated first name of the employee",
       name: "updateEmpFirstName",
       when: function(answers){
-        answers.updateEmpChoice === "Employee's First Name";
+        return answers.updateEmpChoice === "Employee's First Name";
       }
     },
     {
@@ -313,7 +348,7 @@ function updateEmployee(){
       message: "Please enter the updated last name of the employee",
       name: "updateEmpLastName",
       when: function(answers){
-        answers.updateEmpChoice === "Employee's Last Name";
+        return answers.updateEmpChoice === "Employee's Last Name";
       }
     },
     {
@@ -321,7 +356,7 @@ function updateEmployee(){
       message: "Please enter the updated role id for the employee",
       name: "updateEmpRoleId",
       when: function(answers){
-        answers.updateEmpChoice === "Employee's Role Id";
+        return answers.updateEmpChoice === "Employee's Role Id";
       }
     },
     {
@@ -329,7 +364,7 @@ function updateEmployee(){
       message: "Please enter the updated manager id for the  employee",
       name: "updateEmpMgrId",
       when: function(answers){
-        answers.updateEmpChoice === "Employee's Manager's Role Id";
+        return answers.updateEmpChoice === "Employee's Manager's Role Id";
       }
     }],
   )
@@ -340,17 +375,17 @@ function updateEmployee(){
         connection.query(
         "UPDATE employee SET ? WHERE ?",
         {
-          first_name: updateEmpFirstName,
+          first_name: answers.updateEmpFirstName,
         },        
         {
-          first_name: updateEmpFirstName,
+          id: empArray.indexOf(employee) + 1,
         },
           function(error, response){
           // if there is an error, stop the program
             if (error) throw error;
             // if successful, console log the message below
             console.log(response.affectedRows + " employee information updated \n");
-            start();
+            returnPrompt();
           });
     }
   });

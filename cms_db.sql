@@ -57,3 +57,9 @@ VALUES (1, "Accountant", 75000, 1), (2, "Client Manager", 50000, 4), (3, "Databa
 -- Starting information for the employee table --
 INSERT INTO employee (first_name, last_name, role_id, manager_id)
 VALUES ("Abby", "Anderson", 1, 100), ("Bob", "Brown", 2, 200), ("Calvin", "Cooper", 3, 300), ("Debbie", "Downer", 4, null);
+
+SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role on employee.role_id=role.id; 
+
+SELECT department.id, department.name, role.department_id FROM department INNER JOIN role on department.id = role.department_id;
+
+SELECT employee.id, employee.first_name, employee.last_name, role.title FROM employee LEFT JOIN role on employee.role_id=role.id INNER JOIN department ON role.department_id=department.id 
