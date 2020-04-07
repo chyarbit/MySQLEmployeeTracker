@@ -394,12 +394,12 @@ function updateEmployee(employee){
         case "Employee's Last Name":
           connection.query(
           "UPDATE employee SET ? WHERE ?",
-          {
+          [{
             first_name: answers.updateEmpLastName,
           },        
           {
             id: empArray.indexOf(employee) + 1,
-          },
+          }],
             function(error, response){
             // if there is an error, stop the program
               if (error) throw error;
@@ -413,12 +413,12 @@ function updateEmployee(employee){
         case "Employee's Role Id":
           connection.query(
           "UPDATE employee SET ? WHERE ?",
-          {
+          [{
             first_name: answers.updateEmpRoleId,
           },        
           {
             id: empArray.indexOf(employee) + 1,
-          },
+          }],
           function(error, response){
             // if there is an error, stop the program
               if (error) throw error;
@@ -432,12 +432,12 @@ function updateEmployee(employee){
         case "Employee's Manager's Role Id":
           connection.query(
           "UPDATE employee SET ? WHERE ?",
-          {
+          [{
             first_name: answers.updateEmpMgrId,
           },        
           {
             id: empArray.indexOf(employee) + 1,
-          },
+          }],
           function(error, response){
             // if there is an error, stop the program
               if (error) throw error;
