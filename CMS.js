@@ -55,8 +55,6 @@ const questions = [
   },
 ]
 
-//var employee = "";
-
 function populateData(){
   connection.query(
     "SELECT * FROM employee",
@@ -64,7 +62,6 @@ function populateData(){
       for (var i=0; i<response.length; i++){
         empArray.push(response[i].first_name + " " + response[i].last_name)
       }
-      //console.log(response)
     })
 };
 
@@ -146,7 +143,7 @@ function addDepartment(){
       // if there is an error, stop the program
       if (error) throw error;
       // if successful, console log the message below
-      console.log(response.affectedRows + " department created \n");
+      console.log("Department created +\n");
       // call start function to run through task options again
       start(); 
     })
@@ -192,7 +189,7 @@ function addRole(){
       // if there is an error, stop the program
       if (error) throw error;
       // if successful, console log the message below
-      console.log(response.affectedRows + " role created \n");
+      console.log("New role created + \n");
       start();
     });
   });
@@ -236,7 +233,7 @@ function addEmployee(){
       // if there is an error, stop the program
       if (error) throw error;
       // if successful, console log the message below
-      console.log(response.affectedRows + " employee created \n");
+      console.log("New employee entered + \n");
       start();
     });
 });
@@ -248,7 +245,7 @@ function viewDepartment(){
     function(error, response) {
       if (error) throw error;
       // Log all results of the SELECT statement
-      console.table(response);
+      console.table(response + "\n");
       start();
     });
 };
@@ -259,7 +256,7 @@ function viewRole(){
     function(error, response) {
       if (error) throw error;
       // Log all results of the SELECT statement
-      console.table(response);
+      console.table(response + "\n");
       start();
     });
 };
@@ -270,7 +267,7 @@ function viewEmployee(){
     function(error, response) {
       if (error) throw error;
       // Log all results of the SELECT statement
-      console.table(response);
+      console.table(response + "\n");
       start();
     });
 };
@@ -281,7 +278,7 @@ function findAllEmployeesByDepartment() {
     function(error, response) {
       if (error) throw error;
       // Log all results of the SELECT statement
-      console.table(response);
+      console.table(response + "\n");
       start();
     });
   }
@@ -297,10 +294,10 @@ function returnPrompt(){
   )
   .then(function({exitUpdateMenu}){
     if (!exitUpdateMenu){
-      start()
+      selectEmployeetoUpdate()
     }
     else{
-      selectEmployeetoUpdate();
+      start();
     }
   })
 }
@@ -384,8 +381,6 @@ function updateEmployee(employee){
           function(error, response){
           // if there is an error, stop the program
             if (error) throw error;
-            // if successful, console log the message below
-            console.log(response.affectedRows + " employee information updated \n");
           },
           returnPrompt()
         )
@@ -403,8 +398,6 @@ function updateEmployee(employee){
             function(error, response){
             // if there is an error, stop the program
               if (error) throw error;
-              // if successful, console log the message below
-              console.log(response.affectedRows + " employee information updated \n");
             },
             returnPrompt()
         )
@@ -422,8 +415,6 @@ function updateEmployee(employee){
           function(error, response){
             // if there is an error, stop the program
               if (error) throw error;
-              // if successful, console log the message below
-              console.log(response.affectedRows + " employee information updated \n");
             },
             returnPrompt()
         )
@@ -441,8 +432,6 @@ function updateEmployee(employee){
           function(error, response){
             // if there is an error, stop the program
               if (error) throw error;
-              // if successful, console log the message below
-              console.log(response.affectedRows + " employee information updated \n");
             },
             returnPrompt()
         )
