@@ -1,35 +1,9 @@
 // dependencies needed
+var connection = require("./connection.js");
 // require mysql
 var mysql = require("mysql");
 // require inquirer
 var inquirer = require("inquirer");
-// require console.table npm
-// var cTable = require("console.table");
-
-// define connection as mysql's createConnection method
-var connection = mysql.createConnection({
-  host: "localhost",
-
-  // Your port; if not 3306
-  port: process.env.PORT || 3306,
-
-  // Your username
-  user: "root",
-
-  // Your password
-  password: "root",
-  database: "cms_db"
-});
-
-// using mysql's connect method- create a connection to the server
-connection.connect(function(err) {
-  // if the connection does not work, terminate the program
-  if (err) throw err;
-  // if the connection does work, console log the message below
-  console.log("connected as id " + connection.threadId + "\n");
-  // call function start
-  start();
-});
 
 const empArray = [];
 //console.log(empArray)
@@ -143,7 +117,7 @@ function addDepartment(){
       // if there is an error, stop the program
       if (error) throw error;
       // if successful, console log the message below
-      console.log("Department created +\n");
+      console.log("Department created");
       // call start function to run through task options again
       start(); 
     })
@@ -189,7 +163,7 @@ function addRole(){
       // if there is an error, stop the program
       if (error) throw error;
       // if successful, console log the message below
-      console.log("New role created + \n");
+      console.log("New role created");
       start();
     });
   });
@@ -233,7 +207,7 @@ function addEmployee(){
       // if there is an error, stop the program
       if (error) throw error;
       // if successful, console log the message below
-      console.log("New employee entered + \n");
+      console.log("New employee entered");
       start();
     });
 });
@@ -245,7 +219,7 @@ function viewDepartment(){
     function(error, response) {
       if (error) throw error;
       // Log all results of the SELECT statement
-      console.table(response + "\n");
+      console.table(response);
       start();
     });
 };
@@ -256,7 +230,7 @@ function viewRole(){
     function(error, response) {
       if (error) throw error;
       // Log all results of the SELECT statement
-      console.table(response + "\n");
+      console.table(response);
       start();
     });
 };
@@ -267,7 +241,7 @@ function viewEmployee(){
     function(error, response) {
       if (error) throw error;
       // Log all results of the SELECT statement
-      console.table(response + "\n");
+      console.table(response);
       start();
     });
 };
@@ -278,7 +252,7 @@ function findAllEmployeesByDepartment() {
     function(error, response) {
       if (error) throw error;
       // Log all results of the SELECT statement
-      console.table(response + "\n");
+      console.table(response);
       start();
     });
   }
@@ -313,7 +287,7 @@ inquirer
   }
   )
   .then(function(data){
-    console.log(data)
+    //console.log(data)
     updateEmployee(data.employeeToUpdate);
   })
 };
@@ -366,8 +340,8 @@ function updateEmployee(employee){
     }],
   )
   .then(function(answers){
-    console.log(employee);
-    console.log(empArray.indexOf(employee) + 1)
+    //console.log(employee);
+    //console.log(empArray.indexOf(employee) + 1)
     switch(answers.updateEmpChoice){
       case "Employee's First Name":
         connection.query(
@@ -439,4 +413,6 @@ function updateEmployee(employee){
     }
   });
 };
+
+start();
 
